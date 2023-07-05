@@ -1,0 +1,73 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   email     String   @unique
+//   name      String?
+//   role      Role     @default(USER)
+//   // posts     Post[]
+//   Post      Post[]
+// }
+
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   published Boolean  @default(false)
+//   title     String   @db.VarChar(255)
+//   author    User?    @relation(fields: [authorId], references: [id])
+//   authorId  Int?
+// }
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// Define the `Post` table in the database
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   published Boolean? @default(false)
+//   title     String
+//   content   String?
+//   author    User?    @relation(fields: [authorId], references: [id])
+//   authorId  Int?
+// }
+
+model Quest {
+  id           String         @id @default(uuid())
+  name         String
+  description  String
+  EndDate      DateTime
+  questUserMap QuestUserMap[]
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String
+  score        String
+  email        String         @unique
+  questUserMap QuestUserMap[]
+}
+
+model QuestUserMap {
+  id        Int       @id @default(autoincrement())
+  quest     Quest     @relation(fields: [questId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  state     Boolean
+  startDate DateTime  @default(now())
+  endTime   DateTime?
+  updatedAt DateTime  @updatedAt
+  post      String
+
+  userId  String
+  questId String
+}
